@@ -67,6 +67,11 @@ func main() {
 		})
 	}
 
+	keys := ui.DefaultKeyMap()
+	if overrides := cfg.Keybindings(); overrides != nil {
+		keys = ui.ApplyOverrides(keys, overrides)
+	}
+
 	args := root.Args()
 	cmd := "tui"
 	if len(args) > 0 {
@@ -77,7 +82,7 @@ func main() {
 	case "help":
 		printHelp()
 	case "tui":
-		m := ui.NewMainModel(st, cfg, ctx, strikethrough)
+		m := ui.NewMainModel(st, cfg, ctx, strikethrough, keys)
 		if _, err := tea.NewProgram(m, tea.WithAltScreen()).Run(); err != nil {
 			fatal(err)
 		}
@@ -87,7 +92,7 @@ func main() {
 			fatal(err)
 		}
 	case "quick":
-		m := ui.NewQuickAddModel(st, ctx)
+		m := ui.NewQuickAddModel(st, ctx, keys)
 		if _, err := tea.NewProgram(m).Run(); err != nil {
 			fatal(err)
 		}

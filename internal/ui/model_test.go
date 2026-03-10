@@ -67,7 +67,7 @@ func TestRestoreUIState(t *testing.T) {
 	if err := cfg.SaveUI(uiState); err != nil {
 		t.Fatal(err)
 	}
-	m := NewMainModel(st, cfg, gitctx.Context{Branch: "global"}, false)
+	m := NewMainModel(st, cfg, gitctx.Context{Branch: "global"}, false, DefaultKeyMap())
 	if m.mode != viewGeneral {
 		t.Fatalf("mode = %v, want %v", m.mode, viewGeneral)
 	}
@@ -92,7 +92,7 @@ func TestRestoreUIStateDoesNotOverrideCurrentContextMode(t *testing.T) {
 		t.Fatal(err)
 	}
 	ctx := gitctx.Context{RepoRoot: "/repo", WorktreeRoot: "/repo/wt", Branch: "feat"}
-	m := NewMainModel(st, cfg, ctx, false)
+	m := NewMainModel(st, cfg, ctx, false, DefaultKeyMap())
 	if m.mode != viewContext {
 		t.Fatalf("mode = %v, want %v", m.mode, viewContext)
 	}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -16,6 +17,7 @@ import (
 type QuickAddModel struct {
 	store *store.Store
 	ctx   gitctx.Context
+	keys  KeyMap
 
 	input       textinput.Model
 	height      int
@@ -31,7 +33,7 @@ var (
 	quickHintStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("246"))
 )
 
-func NewQuickAddModel(st *store.Store, ctx gitctx.Context) QuickAddModel {
+func NewQuickAddModel(st *store.Store, ctx gitctx.Context, keys KeyMap) QuickAddModel {
 	in := textinput.New()
 	in.Prompt = "> "
 	in.CharLimit = 300
@@ -40,6 +42,7 @@ func NewQuickAddModel(st *store.Store, ctx gitctx.Context) QuickAddModel {
 	return QuickAddModel{
 		store: st,
 		ctx:   ctx,
+		keys:  keys,
 		input: in,
 	}
 }
@@ -60,10 +63,10 @@ func (m QuickAddModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.input.Width = w
 		return m, nil
 	case tea.KeyMsg:
-		switch msg.String() {
-		case "esc", "ctrl+c":
+		switch {
+		case key.Matches(msg, m.keys.QuickAdd.Cancel):
 			return m, tea.Quit
-		case "enter":
+		case key.Matches(msg, m.keys.QuickAdd.Save):
 			spec, err := quickadd.Parse(strings.TrimSpace(m.input.Value()), m.ctx.Key())
 			if err != nil {
 				m.status = err.Error()

@@ -102,9 +102,9 @@ set -g @tmux-todo-focus-cooldown-sec "0"        # default: 0
 set -g @tmux-todo-alert-duration-ms "5000"      # default: 5000
 set -g @tmux-todo-focus-duration-ms "2000"      # default: 2000
 
-# Keybindings (empty = disabled)
-set -g @tmux-todo-bind-full ""          # default: "" (prefix key)
-set -g @tmux-todo-bind-peek ""          # default: "" (prefix key)
+# Keybindings (set to "" to disable)
+set -g @tmux-todo-bind-full "T"         # default: T (prefix + T)
+set -g @tmux-todo-bind-peek "t"         # default: t (prefix + t)
 set -g @tmux-todo-bind-quick "C-t"      # default: C-t (no-prefix key)
 
 # TPM loader (keep at bottom)
